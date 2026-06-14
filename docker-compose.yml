@@ -1,0 +1,36 @@
+#docker compose down && docker compose build --no-cache && docker compose up -d
+services:
+  app:
+    build: .
+    container_name: python_app
+    depends_on:
+      - db
+    environment: 
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=mydb
+      - DB_USER=myuser
+      - DB_PASSWORD=mypassword
+      - MONTH_PRIOR=${MONTH_PRIOR:-0}
+    volumes: #caching og file
+      - ./fhvhv_tripdata_2026-01.parquet:/app/fhvhv_tripdata_2026-01.parquet
+      - ./export.json:/tmp/export.json   # now the app writes here
+    working_dir: /app
+    # command: python dataRetrieval.py && python data_analysis.py # does this even wor k ? does it make it happen twice ??
+
+  db: # psql -h localhost -U myuser -p 5432 -d mydb
+    image: postgres:15
+    container_name: postgres_db
+    environment:
+      - POSTGRES_DB=mydb
+      - POSTGRES_USER=myuser
+      - POSTGRES_PASSWORD=mypassword
+    volumes:
+      - pgdata:/var/lib/postgresql/data   # named volume to persist DB data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # run init.sql on startup
+
+    ports:
+      - "0.0.0.0:5432:5432"
+
+volumes:
+  pgdata:

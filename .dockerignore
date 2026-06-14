@@ -1,0 +1,5 @@
+fhvhv_tripdata_2026-01.parquet
+*.parquet
+__pycache__
+*.pyc
+.env
