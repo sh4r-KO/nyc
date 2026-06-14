@@ -44,7 +44,7 @@ psql -h localhost -U myuser -p 5432 -d mydb -a -f Data_aggregations.sql
 
 to run inside a container :
 podman exec -it <CONTAINER_ID> sh
-
+idk
 ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
